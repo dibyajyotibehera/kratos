@@ -3,6 +3,8 @@ package login
 import (
 	"context"
 	"fmt"
+	"github.com/ory/x/sqlxx"
+	"github.com/tidwall/gjson"
 	"net/http"
 	"net/url"
 	"strings"
@@ -58,6 +60,9 @@ type Flow struct {
 	// required: true
 	IssuedAt time.Time `json:"issued_at" faker:"time_type" db:"issued_at"`
 
+	// InternalContext stores internal context used by internals - for example MFA keys.
+	InternalContext sqlxx.JSONRawMessage `db:"internal_context" json:"-" faker:"-"`
+
 	// RequestURL is the initial URL that was requested from Ory Kratos. It can be used
 	// to forward information contained in the URL's path or query for example.
 	//
@@ -110,6 +115,7 @@ func NewFlow(conf *config.Config, exp time.Duration, csrf string, r *http.Reques
 		RequestedAAL: identity.AuthenticatorAssuranceLevel(strings.ToLower(stringsx.Coalesce(
 			r.URL.Query().Get("aal"),
 			string(identity.AuthenticatorAssuranceLevel1)))),
+		InternalContext: []byte("{}"),
 	}
 }
 
@@ -150,4 +156,10 @@ func (f *Flow) AppendTo(src *url.URL) *url.URL {
 
 func (f Flow) GetNID() uuid.UUID {
 	return f.NID
+}
+
+func (f *Flow) EnsureInternalContext() {
+	if !gjson.ParseBytes(f.InternalContext).IsObject() {
+		f.InternalContext = []byte("{}")
+	}
 }

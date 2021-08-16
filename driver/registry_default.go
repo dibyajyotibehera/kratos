@@ -2,6 +2,7 @@ package driver
 
 import (
 	"context"
+	"github.com/ory/kratos/selfservice/strategy/webauthn"
 	"net/http"
 	"strings"
 	"sync"
@@ -259,6 +260,7 @@ func (m *RegistryDefault) selfServiceStrategies() []interface{} {
 			profile.NewStrategy(m),
 			link.NewStrategy(m),
 			totp.NewStrategy(m),
+			webauthn.NewStrategy(m),
 			lookup.NewStrategy(m),
 		}
 	}
