@@ -26,7 +26,10 @@ return (function (e) {
 
   if (opt.publicKey.excludeCredentials) {
     opt.publicKey.excludeCredentials = opt.publicKey.excludeCredentials.map(function (value) {
-      return Object.assign(value, {id: bufferDecode(value.id)})
+      return {
+        ...value,
+        id: bufferDecode(value.id)
+      }
     })
   }
 
@@ -40,6 +43,7 @@ return (function (e) {
         clientDataJSON: bufferEncode(credential.response.clientDataJSON),
       },
     })
+    console.log("setting", e.value)
     e.click()
   }).catch((err) => {
     alert(err)

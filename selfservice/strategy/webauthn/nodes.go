@@ -2,6 +2,7 @@ package webauthn
 
 import (
 	_ "embed"
+	"fmt"
 	"github.com/ory/kratos/text"
 	"github.com/ory/kratos/ui/node"
 	"strings"
@@ -35,7 +36,7 @@ func NewWebAuthnConnectionName() *node.Node {
 }
 
 func NewWebAuthnUnlink(c *Credential) *node.Node {
-	return node.NewInputField(node.WebAuthnRemove, c.ID, node.WebAuthnGroup,
+	return node.NewInputField(node.WebAuthnRemove, fmt.Sprintf("%x", c.ID), node.WebAuthnGroup,
 		node.InputAttributeTypeSubmit).
 		WithMetaLabel(text.NewInfoSelfServiceRemoveWebAuthn(c.DisplayName, c.AddedAt))
 }

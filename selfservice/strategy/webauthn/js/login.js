@@ -22,11 +22,14 @@ return (function (e) {
 
   const opt = injectWebAuthnOptions
   opt.publicKey.challenge = bufferDecode(opt.publicKey.challenge);
-  opt.publicKey.allowCredentials.forEach(function (value) {
-    value.id = bufferDecode(value.id)
+  opt.publicKey.allowCredentials = opt.publicKey.allowCredentials.map(function (value) {
+    return {
+      ...value,
+      id: bufferDecode(value.id)
+    }
   });
 
-  console.log({opt})
+  console.log("requesting", opt)
   navigator.credentials.get(opt).then(function (credential) {
     e.value = JSON.stringify({
       id: credential.id,

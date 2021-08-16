@@ -3,6 +3,7 @@ package webauthn
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/duo-labs/webauthn/protocol"
 	"github.com/duo-labs/webauthn/webauthn"
 	"github.com/ory/x/sqlcon"
@@ -171,7 +172,7 @@ func (s *Strategy) continueSettingsFlowRemove(w http.ResponseWriter, r *http.Req
 
 	updated := make([]Credential, 0)
 	for k, cred := range cc.Credentials {
-		if cred.ID != p.Remove {
+		if fmt.Sprintf("%x",cred.ID) != p.Remove {
 			updated = append(updated, cc.Credentials[k])
 		}
 	}

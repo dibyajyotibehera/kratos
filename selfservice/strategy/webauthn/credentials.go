@@ -15,11 +15,11 @@ type Credentials []Credential
 
 func CredentialFromWebAuthn(credential *webauthn.Credential) *Credential {
 	return &Credential{
-		ID:              string(credential.ID),
-		PublicKey:       string(credential.PublicKey),
+		ID:              credential.ID,
+		PublicKey:       credential.PublicKey,
 		AttestationType: credential.AttestationType,
 		Authenticator: Authenticator{
-			AAGUID:       string(credential.Authenticator.AAGUID),
+			AAGUID:       credential.Authenticator.AAGUID,
 			SignCount:    credential.Authenticator.SignCount,
 			CloneWarning: credential.Authenticator.CloneWarning,
 		},
@@ -36,11 +36,11 @@ func (c Credentials) ToWebAuthn() []webauthn.Credential {
 
 func (c *Credential) ToWebAuthn() *webauthn.Credential {
 	return &webauthn.Credential{
-		ID:              []byte(c.ID),
-		PublicKey:       []byte(c.PublicKey),
+		ID:              c.ID,
+		PublicKey:       c.PublicKey,
 		AttestationType: c.AttestationType,
 		Authenticator: webauthn.Authenticator{
-			AAGUID:       []byte(c.Authenticator.AAGUID),
+			AAGUID:       c.Authenticator.AAGUID,
 			SignCount:    c.Authenticator.SignCount,
 			CloneWarning: c.Authenticator.CloneWarning,
 		},
@@ -48,17 +48,16 @@ func (c *Credential) ToWebAuthn() *webauthn.Credential {
 }
 
 type Credential struct {
-	ID              string        `json:"id"`
-	PublicKey       string        `json:"public_key"`
+	ID              []byte        `json:"id"`
+	PublicKey       []byte        `json:"public_key"`
 	AttestationType string        `json:"attestation_type"`
 	Authenticator   Authenticator `json:"authenticator"`
-
 	DisplayName string    `json:"display_name"`
 	AddedAt     time.Time `json:"added_at"`
 }
 
 type Authenticator struct {
-	AAGUID       string `json:"aaguid"`
+	AAGUID       []byte `json:"aaguid"`
 	SignCount    uint32 `json:"sign_count"`
 	CloneWarning bool   `json:"clone_warning"`
 }
